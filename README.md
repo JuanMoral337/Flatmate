@@ -38,3 +38,11 @@ Each score is normalized and combined into an overall **compatibility percentage
 
 ##  Project Structure
 
+
+### 1. Prerequisites
+- Python 3.8+ installed  
+- No external libraries required (uses only built-in modules: `heapq`, `math`)
+
+### 2. Run the Script
+Open a python terminal such as Google Collab or Python. Copy and paste the code on this document. Run the code, and answer to the different questions in order to get the best flatmate match
+
