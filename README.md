@@ -47,10 +47,10 @@ Each score is normalized and combined into an overall **compatibility percentage
 Open a python terminal such as Google Collab or Python. Copy and paste the code on this document. Run the code, and answer to the different questions in order to get the best flatmate match
 
 ## Credits
-Ignacio Roca de Togores
-Alejandro Montojo
-Lucas Parga
-Bosco Oficialdegui
-Angelo Pascarela
-Juan Moral
+Ignacio Roca de Togores,
+Alejandro Montojo,
+Lucas Parga,
+Bosco Oficialdegui,
+Angelo Pascarela,
+Juan Moral.
 
