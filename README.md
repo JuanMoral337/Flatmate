@@ -44,7 +44,8 @@ Each score is normalized and combined into an overall **compatibility percentage
 - No external libraries required (uses only built-in modules: `heapq`, `math`)
 
 ### 2. Run the Script
-Open a python terminal such as Google Collab or Python. Copy and paste the code on this document. Run the code, and answer to the different questions in order to get the best flatmate match
+Open a python terminal such as Google Collab or Python. Copy and paste the code on this document. Run the code, and answer to the different questions in order to get the best flatmate match.
+You can also access the platform through this link https://flatmate-ie-match.lovable.app, which will directly take you to our website
 
 ## Credits
 Ignacio Roca de Togores,
