@@ -1,57 +1,146 @@
-# Flatmate Finder
-* Flatmate Finder** is a Python-based console application that helps IE University (at the moment) students find compatible flatmates based on lifestyle preferences, personal habits, and budget.  
-It ensures that only IE students can access the system by requiring an official `.ieu2024@student.ie.edu` email.
----
-## Overview
+#IE Flatmate Finder (Lovable + Python App)
 
-The program collects user preferences (cleanliness, noise tolerance, guest frequency, smoking, budget, etc.) through a simple questionnaire.  
-It then compares these preferences with a small database of existing users and calculates a **compatibility score** using weighted similarity metrics.
-
-Users can also apply optional filters (gender, budget range, smoking preference) to refine their results.
+Find your perfect flatmate match at IE University
+Live App https://flatmate-ie-match.lovable.app(https://flatmate-ie-match.lovable.app)
 
 ---
 
-## Main Features
+#Overview
 
--  **IE Email Verification:** Only IE student emails are accepted.  
--  **Lifestyle Questionnaire:** Collects lifestyle and budget preferences.  
--  **Flexible Budget Matching:** Accepts matches within ±€200.  
--  **Weighted Compatibility Algorithm:** Calculates compatibility using multiple lifestyle factors.  
--  **Optional Filters:** Users can specify gender preference, smoking preference, and budget range.  
--  **Top-K Matching:** Displays the top flatmate matches based on compatibility scores.
+IE Flatmate Finder is a student matching tool developed for IE University. It helps students find compatible flatmates safely and efficiently by combining verified access (IE email authentication) with a personality-based matching algorithm.
+
+The project exists in **two integrated versions**:
+1. **Python prototype** — a console program built during the Algorithms & Data Structures course.  
+2. **Lovable web app** — a no-code implementation with a full graphical interface.
+
+Both versions share the same **matching logic**: lifestyle compatibility, hard constraints on budget and area, and verified IE student access.
+
+
+
+#Technical Overview
+
+| Component | Python Prototype | Lovable Web App |
+|---------|-----------------|----------------|
+| Platform* | Python 3.9+ (local execution) | Lovable (no-code builder) |
+| Frontend | Console-based Q&A | Auto-generated React + Tailwind |
+| Algorithm | Weighted similarity & Top-K matching | JavaScript logic blocks in Lovable |
+| Database | CSV / in-memory list | Lovable internal table (`Students`) |
+| Verification | Regex for `@student.ie.edu` | Input validation via Lovable Form Block |
+| Hosting | Local execution | Lovable Cloud |
+| Versioning | Manual | Lovable built-in project versions |
+
+#Algorithm Summary
+
+Both apps use the same **weighted compatibility algorithm**, validated during your course’s Section III.
+
+#Matching Logic
+
+1. Hard Constraints 
+   - Must have the same preferred area.  
+   - Budget difference ≤ ±150€.  
+   - Matching smoking preference (if specified).
+
+2. Weighted Similarity (Soft Constraints)
+   Each lifestyle factor contributes to the compatibility score:
+
+| Attribute | Weight | Type | Description |
+|------------|---------|------|-------------|
+| Cleanliness | 3.0 | Likert | Similarity between 1–5 values |
+| Noise Tolerance | 2.5 | Likert | Inverse of absolute difference |
+| Guest Frequency | 2.0 | Likert | Frequency alignment |
+| Smoking | 3.0 | Boolean | Exact match required |
+| Budget | — | Hard constraint | ±150€ accepted |
+| Area | — | Hard constraint | Must match exactly |
+
+Displayed as a percentage (0–100 %).
 
 ---
 
-##  Compatibility Weights
+#Core Features
 
-| Factor        | Weight |
-|----------------|---------|
-| Area           | 0.1 |
-| Cleanliness    | 0.3 |
-| Noise Tolerance| 0.3 |
-| Guests         | 0.2 |
-| Smoking Habit  | 0.1 |
+#1. IE Email Verification
+- Restricted to emails ending with `@student.ie.edu`.  
+- Prevents access from non-IE accounts.  
+- Provides visual validation feedback (Lovable) or regex check (Python).
 
-Each score is normalized and combined into an overall **compatibility percentage (0–100%)**.
+#2. Step-by-Step Onboarding Flow (Lovable)
+- Step 1: Basic Info — Name, Gender, Preferred Area in Madrid.  
+- Step 2: Lifestyle — Sliders for Cleanliness, Noise, Guests.  
+- Step 3: Preferences — Smoking & Monthly Budget.
+
+#3. Real-Time Matching
+- Lovable logic blocks compute weighted scores instantly.  
+- Results page shows Top 3–5 matches with:
+  - Name, gender, area, budget, lifestyle traits.  
+  - Compatibility percentage (e.g., “74 % Good Match”).  
+- Optional filters: gender, smoking, budget range.
+
+#4. Optional Filters (Python Version)
+Users can refine results by:
+- Gender preference  
+- Smoking habit  
+- Budget range  
 
 ---
 
-##  Project Structure
+#Project Structure
 
+#Python Edition
+- `algorithm.py` – core matching logic  
+- `main.py` – questionnaire + console UI  
+- `students.csv` – demo dataset  
 
-### 1. Prerequisites
-- Python 3.8+ installed  
-- No external libraries required (uses only built-in modules: `heapq`, `math`)
+#Lovable Edition
+- Form blocks for questionnaire steps  
+- Logic blocks for weighting and filtering  
+- Repeater lists for displaying ranked matches  
+- Email validation workflow for domain enforcement  
 
-### 2. Run the Script
-Open a python terminal such as Google Collab or Python. Copy and paste the code on this document. Run the code, and answer to the different questions in order to get the best flatmate match.
-You can also access the platform through this link https://flatmate-ie-match.lovable.app, which will directly take you to our website
+---
 
-## Credits
-Ignacio Roca de Togores,
-Alejandro Montojo,
-Lucas Parga,
-Bosco Oficialdegui,
-Angelo Pascarela,
-Juan Moral.
+#UX / Usability Testing
 
+Three remote usability sessions were conducted to fulfill the course’s Section III UX requirement.
+
+#Test Goals
+- Confirm that new users can complete the form without guidance.  
+- Assess understanding of “Good Match” scores.  
+- Measure trust and clarity of the IE verification step.
+
+#Key Findings
+- Email restriction improved perceived security.  
+- Sliders made lifestyle input intuitive.  
+- Users wanted clarity on match percentages.
+
+#Implemented Improvements
+- Added visual email feedback.  
+- Added filter panel for gender and budget.  
+- Improved readability and color contrast on cards.
+
+---
+
+#Installation & Access
+
+#Lovable Web App
+1. Visit: [https://flatmate-ie-match.lovable.app](https://flatmate-ie-match.lovable.app)  
+2. Enter your name and IE student email.  
+3. Complete the 3-step quiz.  
+4. View your Top Matches instantly.
+
+### Python Prototype
+1. Ensure Python 3.8+ is installed.  
+2. Run `python main.py` in a terminal, or paste the code into an IDE.  
+3. Follow the on-screen questionnaire.  
+4. View your top compatible flatmates in the console.  
+
+(You can also visit the Lovable site for the same experience in a browser.)
+
+---
+
+#Credits
+
+Developed by  
+Angelo Pascarella, Juan Moral, Ignacio Roca de Togores, Bosco Oficialdegui, Lucas Parga, and Alejandro Montojo
+for Algorithms & Data Structures (2025–2026) at IE University.
+
+---
