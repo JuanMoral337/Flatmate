@@ -1,10 +1,8 @@
-# Flatmate
-# IE Flatmate Finder
-
-**IE Flatmate Finder** is a Python-based console application that helps IE University students find compatible flatmates based on lifestyle preferences, personal habits, and budget.  
+# Flatmate Finder
+** Flatmate Finder** is a Python-based console application that helps IE University students find compatible flatmates based on lifestyle preferences, personal habits, and budget.  
 It ensures that only IE students can access the system by requiring an official `.ieu2024@student.ie.edu` email.
 ---
-##Overview
+## Overview
 
 The program collects user preferences (cleanliness, noise tolerance, guest frequency, smoking, budget, etc.) through a simple questionnaire.  
 It then compares these preferences with a small database of existing users and calculates a **compatibility score** using weighted similarity metrics.
@@ -38,5 +36,5 @@ Each score is normalized and combined into an overall **compatibility percentage
 
 ---
 
-## 🗂 Project Structure
+##  Project Structure
 
