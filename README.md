@@ -37,7 +37,7 @@ Both apps use the same **weighted compatibility algorithm**, validated during yo
 
 1. Hard Constraints 
    - Must have the same preferred area.  
-   - Budget difference ≤ ±200€.  
+   - Budget difference ≤ ±200€. 
    - Matching smoking preference (if specified).
 
 2. Weighted Similarity (Soft Constraints)
