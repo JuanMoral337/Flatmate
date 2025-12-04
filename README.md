@@ -116,7 +116,7 @@ Three remote usability sessions were conducted to fulfill the course’s Section
 - Added visual email feedback.  
 - Added filter panel for gender and budget.  
 - Improved readability and color contrast on cards.
-
+- Added a telephone number in the output, for the user to contact his highest matches
 ---
 
 #Installation & Access
