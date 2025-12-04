@@ -49,7 +49,7 @@ Both apps use the same **weighted compatibility algorithm**, validated during yo
 | Noise Tolerance | 2.5 | Likert | Inverse of absolute difference |
 | Guest Frequency | 2.0 | Likert | Frequency alignment |
 | Smoking | 3.0 | Boolean | Exact match required |
-| Budget | — | Hard constraint | ±150€ accepted |
+| Budget | — | Hard constraint | ±200€ accepted |
 | Area | — | Hard constraint | Must match exactly |
 
 Displayed as a percentage (0–100 %).
