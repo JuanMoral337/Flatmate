@@ -1,0 +1,151 @@
+import heapq, math
+
+USERS = [
+    {"id": "u1", "name": "Ana", "gender": "F", "area": "Centro", "cleanliness": 5, "noise": 2, "guests": 2, "smoking": "no", "budget": 700, "phone": "600000001"},
+    {"id": "u2", "name": "Luis", "gender": "M", "area": "Sol", "cleanliness": 3, "noise": 2, "guests": 3, "smoking": "no", "budget": 800, "phone": "600000002"},
+    {"id": "u3", "name": "María", "gender": "F", "area": "La Latina", "cleanliness": 1, "noise": 5, "guests": 5, "smoking": "yes", "budget": 650, "phone": "600000003"},
+    {"id": "u4", "name": "Sofía", "gender": "F", "area": "Moncloa", "cleanliness": 4, "noise": 3, "guests": 2, "smoking": "no", "budget": 750, "phone": "600000004"},
+    {"id": "u5", "name": "Javier", "gender": "M", "area": "Chamberí", "cleanliness": 5, "noise": 1, "guests": 1, "smoking": "no", "budget": 900, "phone": "600000005"}
+]
+
+
+# Weights
+WEIGHTS = {"area": 0.1, "cleanliness": 0.25, "noise": 0.25, "guests": 0.15, "smoking": 0.1, "budget": 0.15}
+BUDGET_TOL = 200
+
+# Input helpers
+def prompt_str(msg, valid=None, lower=False):
+    while True:
+        val = input(msg).strip()
+        if lower:
+            val = val.lower()
+        if not valid or val in valid:
+            return val
+        print(f"Invalid input. Options: {', '.join(valid)}")
+
+def prompt_int(msg, lo=None, hi=None):
+    while True:
+        try:
+            val = int(input(msg))
+            if lo and val < lo:
+                print(f"Enter ≥ {lo}")
+                continue
+            if hi and val > hi:
+                print(f"Enter ≤ {hi}")
+                continue
+            return val
+        except ValueError:
+            print("Enter a valid number.")
+
+# Email restriction
+REQUIRED_EMAIL_SUFFIX = ".ieu2024@student.ie.edu"
+
+def email_allowed(email):
+    return email.lower().endswith(REQUIRED_EMAIL_SUFFIX)
+
+def create_account():
+    print("=== IE-Only Access ===")
+    name = input("Your name: ").strip()
+    while True:
+        email = input(f"Your IE email (must end with '{REQUIRED_EMAIL_SUFFIX}'): ").strip()
+        if email_allowed(email):
+            break
+        print("Access denied. Email must end with required suffix.")
+    print("Login successful.\n")
+    return {"id": f"user_{len(USERS)+1}", "name": name, "email": email}
+
+# Questionnaire
+AREAS = ["Centro", "Sol", "La Latina", "Moncloa", "Chamberí"]
+
+def questionnaire():
+    print("=== Lifestyle Questionnaire ===")
+    gender = prompt_str("Gender (M/F): ", ["m","f"], lower=True).upper()
+    area = prompt_str("Area (" + ", ".join(AREAS) + "): ", [a.lower() for a in AREAS], lower=True).title()
+    cleanliness = prompt_int("Cleanliness (1–5): ", 1, 5)
+    noise = prompt_int("Noise tolerance (1–5): ", 1, 5)
+    guests = prompt_int("Guests frequency (1–5): ", 1, 5)
+    smoking = prompt_str("Do you smoke? (yes/no): ", ["yes","no"], lower=True)
+    budget = prompt_int("Monthly budget (€): ", 0)
+    return {"gender": gender, "area": area, "cleanliness": cleanliness, "noise": noise,
+            "guests": guests, "smoking": smoking, "budget": budget}
+
+# Similarity functions
+def sim_1to5(a, b):
+    return max(0.0, (5 - abs(a-b)) / 5) if a and b else 0.0
+
+def sim_yesno(a, b):
+    return 1.0 if str(a).lower() == str(b).lower() else 0.0
+
+def sim_budget(a, b, tol=BUDGET_TOL):
+    diff = abs(a-b)
+    if diff <= tol:
+        return 1.0
+    return max(0.0, 1 - (diff - tol) / (2 * tol))
+
+def compatibility_score(a, b, w=WEIGHTS):
+    sims = {
+        "area": 1.0 if a["area"] == b["area"] else 0.0,
+        "cleanliness": sim_1to5(a["cleanliness"], b["cleanliness"]),
+        "noise": sim_1to5(a["noise"], b["noise"]),
+        "guests": sim_1to5(a["guests"], b["guests"]),
+        "smoking": sim_yesno(a["smoking"], b["smoking"]),
+        "budget": sim_budget(a["budget"], b["budget"])
+    }
+    return 100 * sum(sims[k] * w[k] for k in w)
+
+
+# Optional filters
+def collect_filters(default_budget):
+    print("\n=== Optional Filters (press Enter to skip) ===")
+    non_smoker_only = input("Non-smokers only? (y/n): ").strip().lower() == "y"
+    gender = input("Preferred gender (M/F or Enter): ").strip().upper() or None
+    try:
+        lo_hi = input(f"Budget range (e.g., {default_budget-200}-{default_budget+200} or Enter): ").strip()
+        if lo_hi:
+            lo, hi = map(int, lo_hi.split("-"))
+        else:
+            lo, hi = default_budget-200, default_budget+200
+    except Exception:
+        lo, hi = default_budget-200, default_budget+200
+    return {"non_smoker_only": non_smoker_only, "gender": gender, "budget_range": (lo, hi)}
+
+def passes_filters(c, p):
+    if p["non_smoker_only"] and c["smoking"] == "yes":
+        return False
+    if p["gender"] and c["gender"] != p["gender"]:
+        return False
+    lo, hi = p["budget_range"]
+    return lo <= c["budget"] <= hi
+
+# Top-K matches (min-heap)
+def top_k(me, others, k=3, prefs=None):
+    heap = []
+    for cand in others:
+        if prefs and not passes_filters(cand, prefs):
+            continue
+        score = compatibility_score(me, cand)
+        if len(heap) < k:
+            heapq.heappush(heap, (score, cand))
+        elif score > heap[0][0]:
+            heapq.heapreplace(heap, (score, cand))
+    return sorted(heap, key=lambda x: x[0], reverse=True)
+
+# Main flow
+
+def main():
+    print("=== Flatmate Finder — IE Exclusive ===")
+    user = create_account()
+    profile = questionnaire()
+    me = {**user, **profile}
+    all_users = USERS + [me]
+    prefs = collect_filters(profile["budget"])
+    k = int(input("How many results (K)? ") or 3)
+    others = [u for u in all_users if u["id"] != me["id"]]
+    results = top_k(me, others, k, prefs)
+    print(f"\nBest matches for {me['name']} ({me['area']}, budget €{me['budget']}):")
+    for i, (s, u) in enumerate(results, 1):
+     print(f"{i}. {u['name']} | Area: {u['area']:<10} | Smoking: {u['smoking']:<3} | Phone: {u['phone']} |Budget: €{u['budget']}| Score: {s:5.1f}%")
+
+
+if __name__ == "__main__":
+    main()
